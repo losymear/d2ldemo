@@ -1,4 +1,4 @@
-# 线性回归实现
+# 3.2 线性回归从0开始实现  https://zh-v2.d2l.ai/chapter_linear-networks/linear-regression-scratch.html#id7
 
 """
 在了解线性回归的关键思想之后，我们可以开始通过代码来动手实现线性回归了。
@@ -52,12 +52,11 @@ def data_iter(batch_size, features, labels):
 
 batch_size = 10
 
-
-
 ### 3.2.3 初始化模型参数
 
-w = torch.normal(0, 0.01, size=(2,1), requires_grad=True)
+w = torch.normal(0, 0.01, size=(2, 1), requires_grad=True)
 b = torch.zeros(1, requires_grad=True)
+
 
 ### 3.2.4 定义模型
 def linreg(X, w, b):  # @save
@@ -102,3 +101,8 @@ for epoch in range(num_epochs):
     with torch.no_grad():
         train_l = loss(net(features, w, b), labels)
         print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
+
+# 因为我们使用的是自己合成的数据集，所以我们知道真正的参数是什么。
+# 因此，我们可以通过比较真实参数和通过训练学到的参数来评估训练的成功程度。 事实上，真实参数和通过训练学到的参数确实非常接近。
+print(f'w的估计误差: {true_w - w.reshape(true_w.shape)}')
+print(f'b的估计误差: {true_b - b}')
