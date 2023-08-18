@@ -36,3 +36,38 @@ data_iter = load_array((features, labels), batch_size)
 from torch import nn
 
 net = nn.Sequential(nn.Linear(2, 1))
+
+### 3.3.4 初始化模型参数
+# 在使用net之前，我们需要初始化模型参数。 如在线性回归模型中的权重和偏置。 深度学习框架通常有预定义的方法来初始化参数。
+# 在这里，我们指定每个权重参数应该从均值为0、标准差为0.01的正态分布中随机采样， 偏置参数将初始化为零。
+
+net[0].weight.data.normal_(0, 0.01)
+net[0].bias.data.fill_(0)
+
+### 3.3.5 定义损失函数
+loss = nn.MSELoss()
+
+### 3.3.6 定义优化算法
+# 小批量随机梯度下降算法是一种优化神经网络的标准工具， PyTorch在optim模块中实现了该算法的许多变种。
+# 当我们实例化一个SGD实例时，我们要指定优化的参数 （可通过net.parameters()从我们的模型中获得）以及优化算法所需的超参数字典。
+# 小批量随机梯度下降只需要设置lr值，这里设置为0.03。
+trainer = torch.optim.SGD(net.parameters(), lr=0.03)
+
+### 3.3.7 训练
+
+num_epochs = 3
+for epoch in range(num_epochs):
+    for X, y in data_iter:
+        l = loss(net(X), y)
+        trainer.zero_grad()
+        l.backward()
+        trainer.step()
+    l = loss(net(features), labels)
+    print(f'epoch {epoch + 1}, loss {l:f}')
+
+
+
+w = net[0].weight.data
+print('w的估计误差：', true_w - w.reshape(true_w.shape))
+b = net[0].bias.data
+print('b的估计误差：', true_b - b)
