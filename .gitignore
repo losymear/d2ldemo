@@ -10,3 +10,5 @@ gen
 *.pyc
 *.ipynb
 /venv
+
+/data
